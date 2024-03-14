@@ -18,6 +18,7 @@ public class Feed {
     @Id
     private String id;
     private String userId;
+    private String nickname;
     private String spaceId;
     private String url;
     @CreatedDate
@@ -26,11 +27,14 @@ public class Feed {
     public Feed(
             String userId,
             String spaceId,
-            String url
+            String url,
+            String nickname
     ) {
+        this.id = UUID.randomUUID().toString();
         this.userId = userId;
         this.spaceId = spaceId;
         this.url = url;
+        this.nickname = nickname;
         this.cAt = LocalDateTime.now();
     }
 }
