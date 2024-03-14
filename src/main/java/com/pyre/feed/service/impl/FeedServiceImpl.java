@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +32,12 @@ public class FeedServiceImpl implements FeedService {
         if (!communityClient.canWriteSpace(userId, feedCreateRequest.spaceId().toString())) {
             throw new PermissionDenyException("해당 스페이스에 피드를 올릴 권한이 없습니다.");
         }
-        String nickname = userClient.getNickname(userId);
+        ResponseEntity<String> nickname = userClient.getNickname(userId);
         Feed feed = Feed.builder()
                 .spaceId(feedCreateRequest.spaceId().toString())
                 .userId(userId)
                 .url(feedCreateRequest.url())
-                .nickname(nickname)
+                .nickname(nickname.getBody())
                 .build();
         feedRepository.insert(feed);
 
