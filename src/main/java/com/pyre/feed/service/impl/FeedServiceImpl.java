@@ -38,6 +38,9 @@ public class FeedServiceImpl implements FeedService {
         if (!communityClient.canWriteSpace(userId, feedCreateRequest.spaceId().toString())) {
             throw new PermissionDenyException("해당 스페이스에 피드를 올릴 권한이 없습니다.");
         }
+        if (feedCreateRequest.url() == null || feedCreateRequest.url().equals("")) {
+            throw new DataNotFoundException("URL이 없습니다.");
+        }
         Feed feed = Feed.builder()
                 .spaceId(feedCreateRequest.spaceId().toString())
                 .userId(userId)
