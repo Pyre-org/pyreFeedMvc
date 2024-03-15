@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 @Repository
 public interface FeedRepository extends MongoRepository<Feed, String> {
     Page<Feed> findAllBySpaceId(String spaceId, Pageable pageable);
+    Page<Feed> findAllByUserId(String userId, Pageable pageable);
+    Page<Feed> findAllBySpaceIdIn(List<String> spaceIds, Pageable pageable);
 }

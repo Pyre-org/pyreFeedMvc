@@ -9,6 +9,8 @@ public record FeedGetResponse(
         String userId,
         String nickname,
         String profilePictureUrl,
+        String title,
+        String description,
         String spaceId,
         String imageUrl,
         String cAt)
@@ -19,6 +21,8 @@ public record FeedGetResponse(
                 feed.getUserId(),
                 nicknameAndProfileImgResponse.nickname(),
                 nicknameAndProfileImgResponse.profilePictureUrl(),
+                feed.getTitle(),
+                feed.getDescription(),
                 feed.getSpaceId(),
                 feed.getUrl(),
                 feed.getCAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))

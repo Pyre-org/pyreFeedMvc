@@ -38,6 +38,13 @@ public class Feed {
         this.description = description;
         this.spaceId = spaceId;
         this.url = url;
-        this.cAt = LocalDateTime.now();
     }
+    public void updateFeed(
+            String title,
+            String description
+    ) {
+        this.title = title;
+        this.description = description;
+    }
+
 }
