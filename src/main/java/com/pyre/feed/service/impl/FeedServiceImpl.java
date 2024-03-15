@@ -19,6 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,12 +36,14 @@ public class FeedServiceImpl implements FeedService {
         if (!communityClient.canWriteSpace(userId, feedCreateRequest.spaceId().toString())) {
             throw new PermissionDenyException("해당 스페이스에 피드를 올릴 권한이 없습니다.");
         }
-        ResponseEntity<String> nickname = userClient.getNickname(userId);
         Feed feed = Feed.builder()
                 .spaceId(feedCreateRequest.spaceId().toString())
                 .userId(userId)
+                .title((!feedCreateRequest.title().equals(null) &&
+                        !feedCreateRequest.title().equals("")) ?
+                        feedCreateRequest.title() : LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                .description(feedCreateRequest.description())
                 .url(feedCreateRequest.url())
-                .nickname(nickname.getBody())
                 .build();
         feedRepository.insert(feed);
 
@@ -52,7 +58,12 @@ public class FeedServiceImpl implements FeedService {
         Sort sort = Sort.by(Sort.Direction.DESC, "cAt");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Feed> feeds = feedRepository.findAllBySpaceId(spaceId, pageable);
-        FeedGetListBySpaceResponse feedGetListBySpaceResponse = FeedGetListBySpaceResponse.makeDto(feeds);
+        List<ResponseEntity<String>> nicknames = feeds.getContent().stream().map(
+                feed -> userClient.getNickname(feed.getUserId())
+        ).toList();
+        List<String> nicknameList = nicknames.stream().map(ResponseEntity::getBody).toList();
+
+        FeedGetListBySpaceResponse feedGetListBySpaceResponse = FeedGetListBySpaceResponse.makeDto(feeds, nicknameList);
         return feedGetListBySpaceResponse;
     }
 }
