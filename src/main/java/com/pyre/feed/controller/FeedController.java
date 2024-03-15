@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/feed")
 @Tag(name = "Feed", description = "Feed API 구성")
+@Validated
 public class FeedController {
     private final FeedService feedService;
     @PostMapping("/upload")
@@ -28,7 +31,7 @@ public class FeedController {
     })
     public ResponseEntity<String> upload(
             @RequestHeader("id") String userId,
-            @RequestBody FeedCreateRequest feedCreateRequest
+            @RequestBody @Valid FeedCreateRequest feedCreateRequest
             ) {
         return ResponseEntity.ok(feedService.uploadObject(feedCreateRequest, userId));
     }

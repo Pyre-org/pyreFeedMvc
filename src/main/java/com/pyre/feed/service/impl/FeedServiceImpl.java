@@ -5,6 +5,7 @@ import com.pyre.feed.clients.UserClient;
 import com.pyre.feed.dto.request.FeedCreateRequest;
 import com.pyre.feed.dto.response.FeedGetListBySpaceResponse;
 import com.pyre.feed.dto.response.FeedGetResponse;
+import com.pyre.feed.dto.response.NicknameAndProfileImgResponse;
 import com.pyre.feed.entity.Feed;
 import com.pyre.feed.exception.customexception.PermissionDenyException;
 import com.pyre.feed.repository.FeedRepository;
@@ -39,7 +40,7 @@ public class FeedServiceImpl implements FeedService {
         Feed feed = Feed.builder()
                 .spaceId(feedCreateRequest.spaceId().toString())
                 .userId(userId)
-                .title((!feedCreateRequest.title().equals(null) &&
+                .title((feedCreateRequest.title() != null &&
                         !feedCreateRequest.title().equals("")) ?
                         feedCreateRequest.title() : LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                 .description(feedCreateRequest.description())
@@ -58,10 +59,10 @@ public class FeedServiceImpl implements FeedService {
         Sort sort = Sort.by(Sort.Direction.DESC, "cAt");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Feed> feeds = feedRepository.findAllBySpaceId(spaceId, pageable);
-        List<ResponseEntity<String>> nicknames = feeds.getContent().stream().map(
-                feed -> userClient.getNickname(feed.getUserId())
+        List<ResponseEntity<NicknameAndProfileImgResponse>> nicknames = feeds.getContent().stream().map(
+                feed -> userClient.getNicknameAndProfileImage(feed.getUserId())
         ).toList();
-        List<String> nicknameList = nicknames.stream().map(ResponseEntity::getBody).toList();
+        List<NicknameAndProfileImgResponse> nicknameList = nicknames.stream().map(ResponseEntity::getBody).toList();
 
         FeedGetListBySpaceResponse feedGetListBySpaceResponse = FeedGetListBySpaceResponse.makeDto(feeds, nicknameList);
         return feedGetListBySpaceResponse;

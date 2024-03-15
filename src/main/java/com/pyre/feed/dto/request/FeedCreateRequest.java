@@ -16,6 +16,7 @@ public record FeedCreateRequest(
         @Pattern(regexp = "^(https://dqgtky3fkqa5j.cloudfront.net/).*", message = "URL 형식이 올바르지 않습니다.")
         String url,
         @Schema(description = "피드 제목", example = "피드 제목")
+
         String title,
         @Schema(description = "피드 설명", example = "피드 설명")
         String description

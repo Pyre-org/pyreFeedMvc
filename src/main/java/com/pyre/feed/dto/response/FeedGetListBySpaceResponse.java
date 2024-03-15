@@ -10,7 +10,7 @@ public record FeedGetListBySpaceResponse(
         Long total,
         List<FeedGetResponse> hits
 ) {
-    public static FeedGetListBySpaceResponse makeDto(Page<Feed> feedPage, List<String> nicknames) {
+    public static FeedGetListBySpaceResponse makeDto(Page<Feed> feedPage, List<NicknameAndProfileImgResponse> nicknames) {
         List<FeedGetResponse> feedGetResponseList = new ArrayList<>();
         for (Feed feed : feedPage.getContent()) {
             FeedGetResponse feedGetResponse = FeedGetResponse.makeDto(feed, nicknames.get(feedPage.getContent().indexOf(feed)));
