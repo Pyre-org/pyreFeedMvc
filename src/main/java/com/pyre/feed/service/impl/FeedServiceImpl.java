@@ -129,6 +129,7 @@ public class FeedServiceImpl implements FeedService {
                 feedUpdateRequest.title(),
                 feedUpdateRequest.description()
         );
+        feedRepository.save(feed);
         return FeedGetMyResponse.makeDto(feed);
     }
 

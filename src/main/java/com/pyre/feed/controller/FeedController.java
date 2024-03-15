@@ -94,7 +94,7 @@ public class FeedController {
     ) {
         return ResponseEntity.ok(feedService.getFeedListByOther(userId, page, size));
     }
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{feedId}")
     @Operation(description = "피드를 삭제하는 엔드포인트")
     @Parameters({
             @Parameter(description = "액세스 토큰 아이디", name = "id", required = true, in = ParameterIn.HEADER),
@@ -102,7 +102,7 @@ public class FeedController {
     })
     public ResponseEntity<String> deleteFeed(
             @RequestHeader("id") String userId,
-            @RequestParam String feedId
+            @PathVariable String feedId
     ) {
         return ResponseEntity.ok(feedService.deleteFeed(feedId, userId));
     }
